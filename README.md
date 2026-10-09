@@ -7,7 +7,7 @@ AI Spark 社群「新闻干货分享」的逐日归档。自 **2026-05-11 第 1 
 | 序号 | 板块 | 来源 |
 | ---: | --- | --- |
 | 1–5 | 社群干货 | 成员当天在 X 上的教程、实战、观点、项目，二次精选 5 条 |
-| 6–10 | AI 新闻 | 从 [AI HOT](https://aihot.virxact.com) 今日精选中挑 5 条 |
+| 6–10 | AI 新闻 | 从 [AI HOT](https://aihot.news) 今日精选中挑 5 条 |
 | 尾部 | 固定介绍 | 社群 AI 知识库与 VIP 社群说明（`footer.md` 逐字复用） |
 
 ## 查阅往期
@@ -54,4 +54,4 @@ AI Spark 社群「新闻干货分享」的逐日归档。自 **2026-05-11 第 1 
 
 - 社群 AI 知识库：https://lcnniolukk80.feishu.cn/wiki/space/7644091204958866380
 - 知识库开源：https://github.com/aisparkedu/knowledge-base
-- AI HOT：https://aihot.virxact.com
+- AI HOT：https://aihot.news

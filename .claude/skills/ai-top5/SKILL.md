@@ -1,6 +1,6 @@
 ---
 name: ai-top5
-description: 每日 AI 五条精选 Skill —— 拉取 AI HOT（aihot.virxact.com）今日精选 AI 动态，再二次精选出最值得看的 5 条，以「一句话总结 + 一个链接」的极简列表返回。当用户说"每日五条 / 今日 AI 五条 / 给我今天的 AI top5 / 每日精选五条 / 来个今日 AI 列表 / ai-top5 / 今天最值得看的 5 条 AI / 每日 AI 简报五条" 等时使用。本 skill 是 `aihot` 的固定格式封装：总是输出恰好 5 条、每条只有一句话和一个链接，不展开摘要、不分版块。用户想看完整资讯或更多条目时用 `[[aihot]]`；想要固定的"每天五条速览"就用本 skill。
+description: 每日 AI 五条精选 Skill —— 拉取 AI HOT（aihot.news）今日精选 AI 动态，再二次精选出最值得看的 5 条，以「一句话总结 + 一个链接」的极简列表返回。当用户说"每日五条 / 今日 AI 五条 / 给我今天的 AI top5 / 每日精选五条 / 来个今日 AI 列表 / ai-top5 / 今天最值得看的 5 条 AI / 每日 AI 简报五条" 等时使用。本 skill 是 `aihot` 的固定格式封装：总是输出恰好 5 条、每条只有一句话和一个链接，不展开摘要、不分版块。用户想看完整资讯或更多条目时用 `[[aihot]]`；想要固定的"每天五条速览"就用本 skill。
 ---
 
 # ai-top5 — 每日 AI 五条精选
@@ -11,16 +11,15 @@ description: 每日 AI 五条精选 Skill —— 拉取 AI HOT（aihot.virxact.c
 
 ### 1. 拉今日精选
 
-> ⚠️ 调 `/api/public/*` 必须带浏览器 User-Agent，否则被 nginx 403。
+> ⚠️ 用 AI HOT **v1**（`https://aihot.news/api/v1`）。旧 `/api/public/*` 将于 2026-10-31 停用。迁移：`take`→`limit`，`since`→`window=24h`，`url`→`links.original`，`source`→`source.name`。请求仍建议带浏览器 User-Agent。
 
 ```bash
 UA="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 ai-top5-skill/0.1.0"
-since=$(date -u -v-24H +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ)
-curl -sH "User-Agent: $UA" "https://aihot.virxact.com/api/public/items?mode=selected&since=$since&take=50" \
-  | jq '.items[] | {title, source, category, publishedAt, url, summary}'
+curl -sH "User-Agent: $UA" "https://aihot.news/api/v1/items?mode=selected&window=24h&limit=50" \
+  | jq '.items[] | {title, source: .source.name, category, publishedAt, url: .links.original, summary}'
 ```
 
-路由同 `[[aihot]]`：默认 `mode=selected` + 最近 24 小时 `since`。不要走 `daily` 或 `mode=all`。
+路由同 `[[aihot]]`：默认 `mode=selected` + `window=24h`。不要走 `daily` 或 `mode=all`。
 
 ### 2. 二次精选 5 条
 

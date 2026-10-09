@@ -1,6 +1,6 @@
 ---
 name: aispark-daily
-description: AI Spark 社群「新闻干货分享」日报生成 Skill —— 把用户给的社群干货分享（N 条，每条作者+一句话+链接）二次精选出 5 条放头部，再用 AI HOT（aihot.virxact.com）今日精选 5 条 AI 新闻补成 6–10 条，最后拼接固定的「知识库 / VIP 社群」尾部，输出一份完整的「AI Spark 新闻干货分享 - 第 N 期」。当用户说"生成今天的新闻干货 / AI Spark 日报 / 社群干货日报 / 出今天这期 / 第 X 期日报 / 把这些干货整理成日报 / 按模板生成新闻干货 / aispark-daily"等，或贴出一批"本社群 XX 分享…+ 链接"的干货让你整理成那个固定格式时使用。本 skill 是 `[[ai-top5]]` 的上层封装：新闻段直接复用 ai-top5 的选法，再叠加社群干货段和固定尾部。只想要纯 AI 新闻速览用 `[[ai-top5]]`，要带社群干货的完整出刊版用本 skill。
+description: AI Spark 社群「新闻干货分享」日报生成 Skill —— 把用户给的社群干货分享（N 条，每条作者+一句话+链接）二次精选出 5 条放头部，再用 AI HOT（aihot.news）今日精选 5 条 AI 新闻补成 6–10 条，最后拼接固定的「知识库 / VIP 社群」尾部，输出一份完整的「AI Spark 新闻干货分享 - 第 N 期」。当用户说"生成今天的新闻干货 / AI Spark 日报 / 社群干货日报 / 出今天这期 / 第 X 期日报 / 把这些干货整理成日报 / 按模板生成新闻干货 / aispark-daily"等，或贴出一批"本社群 XX 分享…+ 链接"的干货让你整理成那个固定格式时使用。本 skill 是 `[[ai-top5]]` 的上层封装：新闻段直接复用 ai-top5 的选法，再叠加社群干货段和固定尾部。只想要纯 AI 新闻速览用 `[[ai-top5]]`，要带社群干货的完整出刊版用本 skill。
 ---
 
 # aispark-daily — AI Spark 新闻干货日报
@@ -41,13 +41,12 @@ description: AI Spark 社群「新闻干货分享」日报生成 Skill —— �
 
 默认复用 `[[ai-top5]]` 的拉取与选法，拿今日精选里最值得看的 5 条放到 6–10 位。
 
-> ⚠️ 调 `/api/public/*` 必须带浏览器 User-Agent，否则被 nginx 403。
+> ⚠️ 用 AI HOT v1（aihot.news/api/v1）；旧 /api/public/* 将于 2026-10-31 停用。请求仍建议带浏览器 User-Agent。
 
 ```bash
 UA="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 aispark-daily-skill/0.1.0"
-since=$(date -u -v-24H +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ)
-curl -sH "User-Agent: $UA" "https://aihot.virxact.com/api/public/items?mode=selected&since=$since&take=50" \
-  | jq '.items[] | {title, source, category, publishedAt, url, summary}'
+curl -sH "User-Agent: $UA" "https://aihot.news/api/v1/items?mode=selected&window=24h&limit=50" \
+  | jq '.items[] | {title, source: .source.name, category, publishedAt, url: .links.original, summary}'
 ```
 
 选法同 `[[ai-top5]]`：重大模型/产品/工具发布、重磅行业政策、有实锤数据的评测优先；小众 Demo、空泛观点、重复事件筛掉；按重要性从高到低排，不是发布时间。
